@@ -32,7 +32,7 @@ export const login = async (req, res, next) => {
     } else {
       res.status(200).json({
         status: 'success',
-        message: 'User is authenticated ',
+        message: 'Login successful',
         token,
       });
     }
