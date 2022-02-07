@@ -1,15 +1,14 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
-import { getUserByEmail } from "../services";
+import { getAUserByEmail } from '../services'
 
 dotenv.config();
 
 export const checkIfEmailExists = async (req, res, next) => {
     try {
       const { email } = req.body;
-      const user = await getUserByEmail(email);
-  
+      const user = await getAUserByEmail(email);
       if (user) {
         return res.status(403).json({
           status: 'Failed',
