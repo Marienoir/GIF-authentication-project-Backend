@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
 
 db.connect()
   .then((obj) => {
-    app.listen(port, () => {
+    app.listen(process.env.PORT || 5000, () => {
       obj.done();
       console.log(`Starting on port ${port}`);
     });
