@@ -3,11 +3,12 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import db from './db';
+import env from './config/env';
+import db from './config/db'
 import route from './router';
 
 dotenv.config();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 const app = express();
 
@@ -44,7 +45,6 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
   res.status(400).json({
     status: 'Failed',
     message: err.message,
@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
 
 db.connect()
   .then((obj) => {
-    app.listen(port, () => {
+    app.listen(process.env.PORT || 5000, () => {
       obj.done();
       console.log(`Starting on port ${port}`);
     });

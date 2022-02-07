@@ -1,5 +1,5 @@
 import userQueries from "../db/queries";
-import db from "../db/index";
+import db from "../config/db";
 import * as utils from "../utils/index";
 
 export const createUser = async (body) => {
@@ -11,6 +11,6 @@ export const createUser = async (body) => {
     return db.one(userQueries.registerUser, payload);
 };
 
-export const getUserByEmail = (email) => db.oneOrNone(userQueries.getUserByEmail, email);
+export const getAUserByEmail = (email) => db.oneOrNone(userQueries.getUserByEmail, email);
 
 export const getAllUsers = () => db.any(userQueries.getAllUsers);

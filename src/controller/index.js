@@ -20,7 +20,7 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    await services.getUserByEmail(email);
+    await services.getAUserByEmail(email);
 
     const token = await validatePassword(email, password);
 
@@ -32,7 +32,7 @@ export const login = async (req, res, next) => {
     } else {
       res.status(200).json({
         status: 'success',
-        message: 'User is authenticated ',
+        message: 'Login successful',
         token,
       });
     }
@@ -45,8 +45,8 @@ export const retrieveAllUsers = async (req, res, next) => {
     try {
       const data = await services.getAllUsers();
 
-      return res.status(201).json({
-        code: 201,
+      return res.status(200).json({
+        code: 200,
         message: 'All Users fetched successfully',
         data
       });

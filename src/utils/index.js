@@ -39,7 +39,7 @@ export const comparePassword = async (password, userPassword) => {
 };
 
 export const validatePassword = async (email, password) => {
-  const user = await services.getUserByEmail(email);
+  const user = await services.getAUserByEmail(email);
 
   if (user) {
     const isValid = await comparePassword(password, user.password);

@@ -1,9 +1,9 @@
 {
     "development": {
-      "ENV": "GIF_API_DATABASE_URL"
+      "ENV": "DEV_DATABASE_URL"
     },
     "test": {
-      "ENV": "GIF_API_DATABASE_URL"
+      "ENV": "TEST_DATABASE_URL"
     },
     "production": {  
       "ENV": "GIF_API_DATABASE_URL"
