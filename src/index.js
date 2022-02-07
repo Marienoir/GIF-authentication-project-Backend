@@ -8,7 +8,7 @@ import db from './config/db'
 import route from './router';
 
 dotenv.config();
-const port = env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 const app = express();
 
