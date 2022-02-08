@@ -14,3 +14,13 @@ export const createUser = async (body) => {
 export const getAUserByEmail = (email) => db.oneOrNone(userQueries.getUserByEmail, email);
 
 export const getAllUsers = () => db.any(userQueries.getAllUsers);
+
+export const alterUserTable = () => db.any(userQueries.alterUserTable);
+
+export const updatePassword = (password, confirm_password, email) => {
+  return db.any(userQueries.updatePassword, [password, confirm_password, email]);
+};
+
+export const updateResetCode = (reset_code, email) => db.any(userQueries.updateResetCode, [reset_code, email]);
+
+export const validateResetCode = (reset_code) => db.oneOrNone(userQueries.validateResetCode, reset_code);

@@ -33,6 +33,21 @@ export const generateToken = (user) => {
   return token;
 };
 
+export const generateResetToken = (user) => {
+  const token = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    },
+    process.env.GIF_API_RESET_KEY,
+    {
+      expiresIn: '1hr',
+    },
+  );
+  return token;
+};
+
 export const comparePassword = async (password, userPassword) => {
   const isValid = await bcrypt.compare(password, userPassword);
   return isValid;
@@ -54,4 +69,9 @@ export const validatePassword = async (email, password) => {
     }
   }
   return false;
+};
+
+export const generateResetCode = () => {
+  let code = ((Math.random() + 1).toString(36).substring(5)).toUpperCase();
+  return code;
 };
