@@ -17,3 +17,17 @@ export const loginUserSchema = {
     password: Joi.string().required().lowercase(),
   }),
 };
+
+export const forgotPasswordSchema = {
+  schema: Joi.object().keys({
+    email: Joi.string().email().required().lowercase()
+  }),
+};
+
+export const resetPasswordSchema = {
+  schema: Joi.object().keys({
+    email: Joi.string().email().required().lowercase(),
+    password: Joi.string().min(3).max(6).pattern(new RegExp('([a-zA-Z]{4})([0-9]{1})([\!@$%^&#*]{1})$')),
+    reset_code: Joi.string().required()
+  }),
+};

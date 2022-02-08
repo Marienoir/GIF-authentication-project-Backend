@@ -11,7 +11,6 @@
 /* eslint-disable no-import-assign */
 /* eslint-disable no-undef */
 import * as uuid from 'uuid';
-import db from '../src/db/index';
 import app from '../src/index';
 
 const { PreparedStatement: PS } = require('pg-promise');
@@ -19,25 +18,13 @@ const { PreparedStatement: PS } = require('pg-promise');
 const { expect } = require('chai');
 const request = require('supertest');
 
-let admin_token, user_token, user_refresh_token, userId, user_first_name, purchase_id, item;
-let userEmail = `richard.${uuid.v1()}@mail.com`;
-let email = 'mike.scofield@gmail.com';
+let admin_token;
+let email = `richard.${uuid.v1()}@gmail.com`;
+let admin_email = 'timileyin@enyata.com';
 let password = 'abcd1@';
 
-// describe('', () => {
-//   before(async () => {
-//     const addAdminRole = new PS({ name: 'seed-role', text: 'INSERT INTO roles(role_code, role_name) VALUES($1, $2), ($3, $4)' });
-//     db.none(addAdminRole, ['ADM', 'ADMIN', 'SUP', 'SUPERVISOR']);
-
-//     const addApprovalStatus = new PS({ name: 'seed-approval', text: 'CREATE TYPE approval_status AS ENUM ($1, $2, $3,)' });
-//     db.none(addApprovalStatus, ['pending', 'approved', 'disapproved']);
-
-//     const addSchedule = new PS({ name: 'add-schedule', text: 'ALTER TABLE users ADD schedule timestamp' });
-//     db.none(addSchedule);
-//   });
-
-  describe('base url', () => {
-    it('baseurl', (done) => {
+  describe('Base Route', () => {
+    it('Base Route', (done) => {
       request(app)
         .get('/')
         .expect(200)
@@ -94,8 +81,8 @@ let password = 'abcd1@';
       request(app)
         .post('/api/v1/login')
         .send({
-          email: 'timileyin@enyata.com',
-          password: 'abcd1@',
+          email: admin_email,
+          password: password,
         })
         .expect(200)
         .end((err, res) => {
@@ -117,6 +104,22 @@ let password = 'abcd1@';
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body).to.be.an('object');
+          done();
+        });
+    });
+  });
+
+  describe('Forgot Password', () => {
+    it('should initiate a reset code', (done) => {
+      request(app)
+        .post('/api/v1/forgot-password')
+        .send({
+          email: email,
+        })
+        .expect(200)
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Reset password link sent successfully');
+          expect(res.status).to.equal(200);
           done();
         });
     });

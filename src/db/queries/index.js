@@ -35,6 +35,22 @@ const userQueries = {
         role
     FROM users
       `,
+    updatePassword: `
+    UPDATE users SET password=$1, confirm_password=$2
+    WHERE email=$3
+      `,
+    updateResetCode: `
+    UPDATE users SET reset_code=$1
+    WHERE email=$2
+    `,
+    validateResetCode: `
+    SELECT 
+        name, 
+        email,
+        reset_code
+    FROM users
+    WHERE reset_code=$1
+    `
   };
   
   export default userQueries;
