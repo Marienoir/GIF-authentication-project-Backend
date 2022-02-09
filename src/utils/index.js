@@ -22,7 +22,7 @@ export const generateToken = (user) => {
     {
       id: user.id,
       email: user.email,
-      name: user.name,
+      name: user.first_name,
       role: user.role,
     },
     process.env.GIF_API_TOKEN_KEY,
@@ -38,7 +38,8 @@ export const generateResetToken = (user) => {
     {
       id: user.id,
       email: user.email,
-      name: user.name,
+      name: user.first_name,
+      last_name: user.last_name
     },
     process.env.GIF_API_RESET_KEY,
     {
@@ -62,7 +63,7 @@ export const validatePassword = async (email, password) => {
       const token = await generateToken({
         id: user.id,
         email: user.email,
-        name: user.name,
+        name: user.first_name,
         role: user.role
       });
       return token;
