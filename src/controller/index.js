@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import * as services from '../services/index';
-import { generateResetToken, hashPassword, validatePassword } from '../utils/index';
+import { comparePassword, generateResetToken, hashPassword, validatePassword } from '../utils/index';
 import { sendResetPasswordLink } from '../utils/mailer';
 
 export const registerUser = async (req, res, next) => {
@@ -82,6 +82,29 @@ export const resetPassword = async (req, res, next) => {
       code: 200,
       message: 'Password Updated Successfully'
     });
+  } catch (error) {
+    return next();
+  }
+};
+
+export const changeUserPassword = async (req, res, next) => {
+  try {
+    const { old_password, new_password, confirm_password } = req.body;
+    const { email } = req.user;
+    // req.body.password = new_password;
+    req.body.confirm_password = confirm_password;
+    console.log(req.body);
+    // const user = await services.getAUserByEmail(email);
+    // console.log( user);
+//     const encryptedPassword = await hashPassword(old_password);
+//  const a = await comparePassword(encryptedPassword,user.password)
+//  console.log(old_password, user.password, a);
+    // const encryptedPassword = await hashPassword(new_password);
+    // await services.changePassword(password, confirm_password, email);
+    // return res.status(200).json({
+    //   code: 200,
+    //   message: 'Password Changed Successfully'
+    // });
   } catch (error) {
     return next();
   }
