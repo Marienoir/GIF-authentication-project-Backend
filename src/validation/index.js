@@ -28,9 +28,9 @@ export const forgotPasswordSchema = {
 
 export const resetPasswordSchema = {
   schema: Joi.object().keys({
-    email: Joi.string().email().required().lowercase(),
+    reset_code: Joi.string().required(),
     password: Joi.string().min(3).max(6).pattern(new RegExp('([a-zA-Z]{4})([0-9]{1})([\!@$%^&#*]{1})$')).required(),
-    reset_code: Joi.string().required()
+    confirm_password: Joi.ref('password'),
   }),
 };
 

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
+import paginate from '../middleware/pagination';
 import * as services from '../services/index';
-import { comparePassword, generateResetToken, hashPassword, validatePassword } from '../utils/index';
+import { generateResetToken, hashPassword, validatePassword } from '../utils/index';
 import { sendResetPasswordLink } from '../utils/mailer';
 
 export const registerUser = async (req, res, next) => {
@@ -10,6 +11,20 @@ export const registerUser = async (req, res, next) => {
     return res.status(201).json({
       code: 201,
       message: 'User created successfully',
+      data
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const registerAdmin = async (req, res, next) => {
+  try {
+    const { body } = req;
+    const data = await services.createAdmin(body);
+    return res.status(201).json({
+      code: 201,
+      message: 'Admin created successfully',
       data
     });
   } catch (error) {
@@ -58,7 +73,7 @@ export const forgotPassword = async (req, res, next) => {
   
     return res.status(200).json({
       status: "success",
-      message: "Reset password link sent successfully",
+      message: "Email sent successfully. Kindly follow the instructions.",
     })
   } catch (error) {
     return next();
@@ -67,20 +82,22 @@ export const forgotPassword = async (req, res, next) => {
 
 export const resetPassword = async (req, res, next) => {
   try {
-    const { email, password, reset_code } = req.body;
+    const { password, reset_code } = req.body;
     const code = await services.validateResetCode(reset_code);
+   
     if(!code){
       return res.status(400).json({
         code: 400,
-        message: 'Invalid Reset Code'
+        message: 'Reset Code Already Used or Invalid Reset Code'
       });
     }
+    const { email } = code;
     const encryptedPassword = await hashPassword(password);
     await services.updatePassword(encryptedPassword, encryptedPassword, email);
-
+    await services.removeResetCode(email);
     return res.status(200).json({
       code: 200,
-      message: 'Password Updated Successfully'
+      message: 'Password Reset Successfully'
     });
   } catch (error) {
     return next();
@@ -91,35 +108,86 @@ export const changeUserPassword = async (req, res, next) => {
   try {
     const { old_password, new_password, confirm_password } = req.body;
     const { email } = req.user;
-    // req.body.password = new_password;
-    req.body.confirm_password = confirm_password;
-    console.log(req.body);
-    // const user = await services.getAUserByEmail(email);
-    // console.log( user);
-//     const encryptedPassword = await hashPassword(old_password);
-//  const a = await comparePassword(encryptedPassword,user.password)
-//  console.log(old_password, user.password, a);
-    // const encryptedPassword = await hashPassword(new_password);
-    // await services.changePassword(password, confirm_password, email);
-    // return res.status(200).json({
-    //   code: 200,
-    //   message: 'Password Changed Successfully'
-    // });
+    const oldPasswordValidated = await validatePassword(email, old_password);
+    
+    if(oldPasswordValidated){
+      const encryptedPassword = await hashPassword(new_password);
+      const encryptedConfirmPassword = await hashPassword(confirm_password);
+      await services.changePassword(encryptedPassword, encryptedConfirmPassword, email);
+      return res.status(200).json({
+        code: 200,
+        message: 'Password Changed Successfully',
+      });
+    }
+    return res.status(400).json({
+      code: 400,
+      message: 'Invalid Password. Password does not exist',
+    });
+    
   } catch (error) {
     return next();
   }
 };
 
 export const retrieveAllUsers = async (req, res, next) => {
-    try {
-      const data = await services.getAllUsers();
+  try {
+    const { name, all} = req.query;
+    const pagination = await paginate(req);
+    const { limit, offset } = pagination;
+    const users = await services.getAllUsers(all, name, limit, offset);
 
-      return res.status(200).json({
-        code: 200,
-        message: 'All Users fetched successfully',
-        data
-      });
-    } catch (error) {
-      return next(error);
-    }
+    return res.status(200).json({
+      code: 200,
+      message: 'All Users fetched successfully',
+      users,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const retrieveAllAdmins = async (req, res, next) => {
+  try {
+    const admins = await services.getAllAdmin();
+
+    return res.status(200).json({
+      code: 200,
+      message: 'All Admins fetched successfully',
+      admins,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getAdminDetails = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const data = await services.getAdminProfile(id);
+
+    return res.status(200).json({
+      code: 200,
+      data
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const updateAnAdminById = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const updatedUser = await services.updateAdminById(
+      req.body,
+      id
+    );
+
+    return res.status(200).json({
+      code: 200,
+      message: 'Admin Updated successfully',
+      data: updatedUser,
+    });
+  } catch (error) {
+    return next(error);
+  }
 };
