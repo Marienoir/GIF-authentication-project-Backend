@@ -35,6 +35,9 @@ export const checkIfEmailExists = async (req, res, next) => {
       if (type === 'admin') {
         req.user = tokenValidated;
       }
+      if (type === 'super-admin') {
+        req.user = tokenValidated;
+      }
       req.user = tokenValidated;
       return next();
     } catch (err) {
@@ -50,7 +53,21 @@ export const checkIfEmailExists = async (req, res, next) => {
       if (req.user.role !== 'admin') {
         return res.status(403).json({
           status: 'Forbidden',
-          message: 'Access Denied',
+          message: 'Access Denied. Accessible to only an Admin',
+        });
+      }
+      return next();
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  export const checkIfUserIsSuperAdmin = async (req, res, next) => {
+    try {
+      if (req.user.role !== 'super-admin') {
+        return res.status(403).json({
+          status: 'Forbidden',
+          message: 'Access Denied. Accessible to only a Super admin',
         });
       }
       return next();

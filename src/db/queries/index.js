@@ -19,6 +19,26 @@ const userQueries = {
         gender,
         role
    `,
+   registerAdmin: `
+   INSERT INTO users (
+       first_name,
+       last_name,
+       email,
+       phone_number,
+       gender,
+       password,
+       confirm_password,
+       role
+   ) VALUES($1, $2, LOWER($3), $4, $5, $6, $7, 'admin')
+   RETURNING 
+       id,
+       first_name,
+       last_name,
+       email,
+       phone_number,
+       gender,
+       role
+  `,
    getUserByEmail: `
     SELECT 
         id,
@@ -32,6 +52,31 @@ const userQueries = {
     FROM users
     WHERE email=$1 
       `,
+    getUserById: `
+    SELECT 
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        gender,
+        password,
+        role
+    FROM users
+    WHERE id=$1 
+    `,
+    getPaginatedUsers: `
+        SELECT 
+            id,
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            gender,
+            role
+        FROM users
+        ORDER BY id limit $1 offset $2
+        `,
     getAllUsers: `
     SELECT 
         id,
@@ -43,6 +88,18 @@ const userQueries = {
         role
     FROM users
       `,
+    getAllAdmin: `
+    SELECT 
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        gender,
+        role
+    FROM users
+    WHERE role = 'admin'
+    `,
     updatePassword: `
     UPDATE users SET password=$1, confirm_password=$2
     WHERE email=$3
@@ -50,6 +107,10 @@ const userQueries = {
     updateResetCode: `
     UPDATE users SET reset_code=$1
     WHERE email=$2
+    `,
+    removeResetCode: `
+    UPDATE users SET reset_code=''
+    WHERE email=$1
     `,
     validateResetCode: `
     SELECT 
@@ -64,6 +125,46 @@ const userQueries = {
     UPDATE users SET password=$1, confirm_password=$2
     WHERE email=$3
       `,
+    getAdminProfile: `
+    SELECT 
+        id,
+        first_name,
+        last_name,
+        email,
+        gender,
+        phone_number,
+        role
+    FROM users
+    WHERE id=$1 
+      `,
+    updateAdminById: `
+    UPDATE users
+    SET 
+        first_name=$1,
+        last_name=$2,
+        phone_number=$3,
+        gender=$4
+    WHERE id=$5
+    RETURNING 
+        id,
+        first_name,
+        last_name,
+        email,
+        gender,
+        phone_number
+    `,
+    searchUserByFirstName: `
+    SELECT
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        gender,
+        role
+    FROM users
+    WHERE to_tsvector(first_name||' ' || last_name) @@to_tsquery($1)
+`,
   };
   
   export default userQueries;
