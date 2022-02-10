@@ -7,9 +7,8 @@ const userQueries = {
         phone_number,
         gender,
         password,
-        confirm_password,
         role
-    ) VALUES($1, $2, LOWER($3), $4, $5, $6, $7, 'user')
+    ) VALUES($1, $2, LOWER($3), $4, $5, $6, 'user')
     RETURNING 
         id,
         first_name,

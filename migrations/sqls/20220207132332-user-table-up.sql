@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS users(
   phone_number varchar not null,
   gender varchar not null,
   password varchar not null,
-  confirm_password varchar not null,
   role varchar not null DEFAULT 'user',
   created_at timestamp default now(),
   updated_at timestamp default now()

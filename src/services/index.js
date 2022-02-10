@@ -4,18 +4,16 @@ import * as utils from "../utils/index";
 
 export const createUser = async (body) => {
     const encryptedPassword = await utils.hashPassword(body.password);
-    const encryptedConfirmPassword = await utils.hashConfirmPassword(body.confirm_password);
     const payload = [
-      body.first_name, body.last_name, body.email, body.phone_number, body.gender, encryptedPassword, encryptedConfirmPassword, body.role
+      body.first_name, body.last_name, body.email, body.phone_number, body.gender, encryptedPassword, body.role
     ];
     return db.one(userQueries.registerUser, payload);
 };
 
 export const createAdmin = async (body) => {
   const encryptedPassword = await utils.hashPassword(body.password);
-  const encryptedConfirmPassword = await utils.hashConfirmPassword(body.confirm_password);
   const payload = [
-    body.first_name, body.last_name, body.email, body.phone_number, body.gender, encryptedPassword, encryptedConfirmPassword, body.role
+    body.first_name, body.last_name, body.email, body.phone_number, body.gender, encryptedPassword, body.role
   ];
   return db.one(userQueries.registerAdmin, payload);
 };

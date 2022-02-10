@@ -1,3 +1,4 @@
+import { join } from 'bluebird';
 import Joi from 'joi';
 
 export const createUserSchema = {
@@ -7,8 +8,7 @@ export const createUserSchema = {
     email: Joi.string().email().lowercase().required(),
     phone_number: Joi.number().required(),
     gender: Joi.string().required(),
-    password: Joi.string().min(3).max(6).pattern(new RegExp('([a-zA-Z]{4})([0-9]{1})([\!@$%^&#*]{1})$')),
-    confirm_password: Joi.ref('password'),
+    password: Joi.string().min(3).max(6).pattern(new RegExp('([a-zA-Z]{4})([0-9]{1})([\!@$%^&#*]{1})$')).required(),
   }),
   message: 'Error creating user',
 };
