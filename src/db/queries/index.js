@@ -26,9 +26,8 @@ const userQueries = {
        phone_number,
        gender,
        password,
-       confirm_password,
        role
-   ) VALUES($1, $2, LOWER($3), $4, $5, $6, $7, 'admin')
+   ) VALUES($1, $2, LOWER($3), $4, $5, $6, 'admin')
    RETURNING 
        id,
        first_name,
@@ -100,15 +99,15 @@ const userQueries = {
     WHERE role = 'admin'
     `,
     updatePassword: `
-    UPDATE users SET password=$1, confirm_password=$2
-    WHERE email=$3
+    UPDATE users SET password=$1, updated_at=NOW()
+    WHERE email=$2
       `,
     updateResetCode: `
-    UPDATE users SET reset_code=$1
+    UPDATE users SET reset_code=$1, updated_at=NOW()
     WHERE email=$2
     `,
     removeResetCode: `
-    UPDATE users SET reset_code=''
+    UPDATE users SET reset_code='', updated_at=NOW()
     WHERE email=$1
     `,
     validateResetCode: `
@@ -121,8 +120,8 @@ const userQueries = {
     WHERE reset_code=$1
     `,
     changePassword: `
-    UPDATE users SET password=$1, confirm_password=$2
-    WHERE email=$3
+    UPDATE users SET password=$1, updated_at=NOW()
+    WHERE email=$2
       `,
     getAdminProfile: `
     SELECT 
@@ -142,7 +141,8 @@ const userQueries = {
         first_name=$1,
         last_name=$2,
         phone_number=$3,
-        gender=$4
+        gender=$4,
+        updated_at=NOW()
     WHERE id=$5
     RETURNING 
         id,

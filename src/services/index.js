@@ -26,8 +26,8 @@ export const getAllAdmin = () => db.any(userQueries.getAllAdmin);
 
 export const alterUserTable = () => db.any(userQueries.alterUserTable);
 
-export const updatePassword = (password, confirm_password, email) => {
-  return db.any(userQueries.updatePassword, [password, confirm_password, email]);
+export const updatePassword = (password, email) => {
+  return db.any(userQueries.updatePassword, [password, email]);
 };
 
 export const updateResetCode = (reset_code, email) => db.any(userQueries.updateResetCode, [reset_code, email]);
@@ -36,8 +36,8 @@ export const removeResetCode = (reset_code, email) => db.any(userQueries.removeR
 
 export const validateResetCode = (reset_code) => db.oneOrNone(userQueries.validateResetCode, reset_code);
 
-export const changePassword = (password, confirm_password, email) => {
-  return db.any(userQueries.changePassword, [password, confirm_password, email]);
+export const changePassword = (password, email) => {
+  return db.any(userQueries.changePassword, [password, email]);
 };
 
 export const getAdminProfile = (id) => db.oneOrNone(userQueries.getAdminProfile, id);

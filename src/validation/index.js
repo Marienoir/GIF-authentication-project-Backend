@@ -30,7 +30,6 @@ export const resetPasswordSchema = {
   schema: Joi.object().keys({
     reset_code: Joi.string().required(),
     password: Joi.string().min(3).max(6).pattern(new RegExp('([a-zA-Z]{4})([0-9]{1})([\!@$%^&#*]{1})$')).required(),
-    confirm_password: Joi.ref('password'),
   }),
 };
 
@@ -38,6 +37,5 @@ export const changePasswordSchema = {
   schema: Joi.object().keys({
     old_password: Joi.string().min(3).max(6).pattern(new RegExp('([a-zA-Z]{4})([0-9]{1})([\!@$%^&#*]{1})$')).required(),
     new_password: Joi.string().min(3).max(6).pattern(new RegExp('([a-zA-Z]{4})([0-9]{1})([\!@$%^&#*]{1})$')).required(),
-    confirm_password: Joi.ref('new_password'),
   }),
 };

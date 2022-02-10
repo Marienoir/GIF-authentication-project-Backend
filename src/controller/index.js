@@ -93,7 +93,7 @@ export const resetPassword = async (req, res, next) => {
     }
     const { email } = code;
     const encryptedPassword = await hashPassword(password);
-    await services.updatePassword(encryptedPassword, encryptedPassword, email);
+    await services.updatePassword(encryptedPassword, email);
     await services.removeResetCode(email);
     return res.status(200).json({
       code: 200,
@@ -106,14 +106,13 @@ export const resetPassword = async (req, res, next) => {
 
 export const changeUserPassword = async (req, res, next) => {
   try {
-    const { old_password, new_password, confirm_password } = req.body;
+    const { old_password, new_password } = req.body;
     const { email } = req.user;
     const oldPasswordValidated = await validatePassword(email, old_password);
     
     if(oldPasswordValidated){
       const encryptedPassword = await hashPassword(new_password);
-      const encryptedConfirmPassword = await hashPassword(confirm_password);
-      await services.changePassword(encryptedPassword, encryptedConfirmPassword, email);
+      await services.changePassword(encryptedPassword, email);
       return res.status(200).json({
         code: 200,
         message: 'Password Changed Successfully',
